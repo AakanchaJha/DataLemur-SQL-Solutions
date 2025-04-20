@@ -1,0 +1,14 @@
+with base as (SELECT
+transactions.*,
+rank() over (partition by user_id
+order by transaction_date ASC
+) rank_transaction
+from transactions
+order by user_id
+)
+
+select user_id,
+spend,
+transaction_date
+from base
+where rank_transaction=3
