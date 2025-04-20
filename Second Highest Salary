@@ -1,0 +1,10 @@
+select salary from (
+SELECT
+salary,
+rank() over(
+order by salary desc
+) as rank_salary
+from employee 
+) base
+
+where rank_salary=2
