@@ -1,0 +1,27 @@
+with base as (
+SELECT
+category,
+product,
+sum(spend) as total_spend
+
+from product_spend
+where EXTRACT (year from TRANSACTION_date)=2022
+group by 1,2
+)
+
+, base_2 as (
+select 
+base.*,
+rank () over (
+partition by category
+order by total_spend desc
+) rank_spend
+from base
+)
+
+select 
+category,
+product,
+total_spend
+from base_2
+where rank_spend<3
