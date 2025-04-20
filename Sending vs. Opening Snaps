@@ -1,0 +1,9 @@
+select 
+age_bucket,
+round((sum(case when activity_type='send' then time_spent end)/sum(case when activity_type='send' or activity_type='open' then time_spent end))*100.0,2) as send_perc, 
+round((sum(case when activity_type='open' then time_spent end)/sum(case when activity_type='send' or activity_type='open' then time_spent end))*100.0,2) as open_perc
+from 
+activities a
+join age_breakdown b
+on a.user_id=b.user_id
+group by 1
