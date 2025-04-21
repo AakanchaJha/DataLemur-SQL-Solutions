@@ -1,0 +1,18 @@
+with base as (SELECT
+measurement_id,
+measurement_value,
+date (measurement_time) as measurement_date,
+row_number () over (
+partition by date(measurement_time)
+order by measurement_time
+) as measurement_order
+from 
+measurements
+)
+
+select 
+measurement_date,
+sum(case when (mod(measurement_order,2)<>0) then measurement_value end) as odd_sum,
+sum(case when (mod(measurement_order,2)=0) then measurement_value end) as even_sum
+from base
+group by 1
