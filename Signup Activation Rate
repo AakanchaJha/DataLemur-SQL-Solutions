@@ -1,0 +1,13 @@
+with base as (
+SELECT
+e.*,
+t.signup_action
+from emails e 
+left join texts t
+on e.email_id=t.email_id
+)
+
+select 
+round(
+(count(distinct case when signup_action='Confirmed' then email_id end) :: DECIMAL)/count(distinct email_id),2) as confirm_rate
+from base
