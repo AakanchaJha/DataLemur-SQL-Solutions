@@ -1,0 +1,16 @@
+with base as (select 
+card_name,
+issued_amount,
+rank () over(
+partition by card_name
+order by issue_year,issue_month asc
+) as earliest_issue_month
+from monthly_cards_issued
+)
+
+SELECT
+card_name,
+issued_amount
+from base 
+where earliest_issue_month=1
+order by issued_amount desc
