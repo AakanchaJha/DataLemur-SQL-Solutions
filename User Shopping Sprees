@@ -1,0 +1,21 @@
+with base as(
+SELECT
+user_id,
+transaction_date,
+lag(transaction_date,1) over (
+partition by user_id
+order by transaction_date
+) as previous_date_1,
+lag(transaction_date,2) over (
+partition by user_id
+order by transaction_date
+) as previous_date_2
+from transactions
+)
+
+SELECT
+user_id
+from base
+where 
+transaction_date=(previous_date_1 + INTERVAL '1 DAY')
+and transaction_date=(previous_date_2 + interval '2 DAY')
