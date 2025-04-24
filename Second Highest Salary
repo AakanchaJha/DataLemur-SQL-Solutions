@@ -1,10 +1,5 @@
-select salary from (
-SELECT
-salary,
-rank() over(
-order by salary desc
-) as rank_salary
-from employee 
-) base
-
-where rank_salary=2
+select 
+DISTINCT salary 
+from employee
+order by salary DESC
+limit 1 offset 1
