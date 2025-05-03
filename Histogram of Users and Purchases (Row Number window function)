@@ -1,0 +1,17 @@
+with base as (select user_id, 
+transaction_date,
+count(*) as purchase_count
+from user_transactions
+group by 1,2
+)
+, base_2 as (
+select 
+base.*,
+row_number () over (partition by user_id order by transaction_date desc) as rn
+from base
+)
+
+select 
+transaction_date, user_id, purchase_count from base_2
+where rn=1
+order by 1
