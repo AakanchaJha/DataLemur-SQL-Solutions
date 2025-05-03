@@ -1,0 +1,9 @@
+with base as (select customer_id, count(distinct product_category) as count_category
+from customer_contracts c
+inner join products p
+on c.product_id=p.product_id 
+group by 1
+)
+
+select customer_id from base 
+where count_category=(select count(distinct product_category) from products)
