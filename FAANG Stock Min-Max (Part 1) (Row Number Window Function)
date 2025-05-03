@@ -1,0 +1,33 @@
+with base as (select ticker, 
+to_char(date,'Mon-YYYY') as "date", 
+open,
+row_number() over(partition by ticker order by open ) as rn 
+from stock_prices
+)
+,highest as (
+select ticker, 
+"date",
+open
+from base
+where rn=(select max(rn) from base
+where ticker=base.ticker)
+)
+,
+lowest as (
+select ticker, 
+"date",
+open
+from base
+where rn=(select min(rn) from base
+where ticker=base.ticker)
+)
+
+select 
+h.ticker,
+h."date" as highest_month,
+h.open as highest_open,
+l."date" as lowest_month,
+l.open as lowest_open
+from highest h
+join lowest l
+on h.ticker=l.ticker
