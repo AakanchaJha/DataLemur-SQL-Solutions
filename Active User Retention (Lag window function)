@@ -1,0 +1,21 @@
+with base as (
+select user_id, 
+extract(month from event_date) as month_date 
+from user_actions
+order by 1
+)
+
+,base_2 as (
+select user_id, 
+month_date, 
+lag(month_date) over (partition by user_id order by month_date) as previous_month 
+from base
+)
+
+select 
+month_date,
+count(user_id) 
+from base_2 where 
+(month_date-previous_month)=1
+and month_date=7
+group by 1
