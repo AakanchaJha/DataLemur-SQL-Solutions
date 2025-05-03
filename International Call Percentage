@@ -1,0 +1,16 @@
+with base as (
+select 
+c.caller_id,
+i.country_id as caller_country,
+c.receiver_id,
+r.country_id as receiver_country
+from phone_calls c
+join  phone_info i
+on c.caller_id=i.caller_id 
+join phone_info r
+on c.receiver_id=r.caller_id
+
+)
+select 
+round((sum(case when caller_country<>receiver_country then 1 end)*100.0)/count(*),1) as pct
+from base
