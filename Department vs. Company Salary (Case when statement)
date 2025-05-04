@@ -1,0 +1,18 @@
+with base as (
+select e.department_id, 
+to_char(payment_date, 'MM-YYYY') as payment_date, 
+avg(e.salary) as dep_avg_salary 
+from employee e 
+join salary s on 
+e.employee_id=s.employee_id
+group by 1,2
+)
+
+select department_id, 
+payment_date, 
+case when dep_avg_salary <(select avg(salary) from employee) then 'lower'
+     when dep_avg_salary  >(select avg(salary) from employee) then 'higher'
+     when dep_avg_salary  =(select avg(salary) from employee) then 'same'
+end as comparison
+from base
+where payment_date='03-2024'
