@@ -1,0 +1,11 @@
+with base as (select server_id, 
+case when session_status='stop' then status_time end  as stop_time, 
+lag(status_time,1) over(partition by server_id order by status_time) as start_time 
+from server_utilization
+)
+
+SELECT
+ round  (extract (epoch from  SUM(stop_time - start_time))  
+  / 86400 ,0)          
+  AS total_uptime_in_days
+FROM base
