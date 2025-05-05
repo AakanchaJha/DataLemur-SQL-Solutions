@@ -1,0 +1,7 @@
+SELECT
+order_id,
+case when 
+mod(order_id,2)<>0 then COALESCE(lead(item) over ( order by order_id),item)
+else lag(item) over ( order by order_id)
+END as item
+from orders
